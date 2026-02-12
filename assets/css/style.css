@@ -152,7 +152,7 @@ a {
   background:
     linear-gradient(92deg, rgba(255, 252, 246, 0.9) 0%, rgba(255, 249, 240, 0.82) 34%, rgba(246, 234, 208, 0.52) 62%, rgba(245, 232, 205, 0.24) 100%),
     radial-gradient(circle at 82% 50%, rgba(152, 122, 70, 0.14), rgba(152, 122, 70, 0)),
-    url("../../img/hero/hero-sofa.jpg") right center/cover no-repeat;
+    url("../img/hero/hero-sofa.jpg") right center/cover no-repeat;
   transform: scale(1.02);
   transform-origin: center;
   animation: heroZoom 14s ease-in-out infinite alternate;
