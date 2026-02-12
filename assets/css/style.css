@@ -167,15 +167,10 @@ a {
 }
 
 .hero-bg {
-  background-color: #dff3f0;
-  background-image:
-    linear-gradient(92deg,
-      rgba(240, 252, 250, 0.92) 0%,
-      rgba(230, 248, 246, 0.85) 34%,
-      rgba(200, 240, 236, 0.52) 62%,
-      rgba(180, 232, 228, 0.22) 100%),
-    radial-gradient(circle at 82% 50%, rgba(0, 201, 183, 0.1), transparent),
-    url("../../img/hero/hero-sofa.jpg") right center/cover no-repeat;
+  background:
+    linear-gradient(92deg, rgba(255, 252, 246, 0.9) 0%, rgba(255, 249, 240, 0.82) 34%, rgba(246, 234, 208, 0.52) 62%, rgba(245, 232, 205, 0.24) 100%),
+    radial-gradient(circle at 82% 50%, rgba(152, 122, 70, 0.14), rgba(152, 122, 70, 0)),
+    url("../img/hero/hero-sofa.jpg") right center/cover no-repeat;
   transform: scale(1.02);
   transform-origin: center;
   animation: heroZoom 14s ease-in-out infinite alternate;
