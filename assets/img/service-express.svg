@@ -1,0 +1,7 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128" role="img" aria-label="Экспресс уборка">
+  <rect width="128" height="128" rx="26" fill="#fffaf0"/>
+  <path d="M30 86h68M42 86l8-46h28l8 46" stroke="#b28f54" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <circle cx="44" cy="36" r="6" fill="#c9a76a"/>
+  <circle cx="64" cy="28" r="6" fill="#c9a76a"/>
+  <circle cx="84" cy="36" r="6" fill="#c9a76a"/>
+</svg>

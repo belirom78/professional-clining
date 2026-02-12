@@ -1,0 +1,141 @@
+﻿<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Цены — Клининг Профессионалы</title>
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-wrap">
+      <a class="logo" href="index.html">Клининг <span>Профессионалы</span></a>
+      <button class="menu-toggle" aria-label="Открыть меню" aria-expanded="false">☰</button>
+      <nav class="nav" aria-label="Основное меню">
+        <a href="index.html#about">О нас</a>
+        <a href="services.html">Услуги</a>
+        <a href="prices.html" class="active">Цены</a>
+        <a href="#calc">Калькулятор</a>
+        <a href="contacts.html">Контакты</a>
+      </nav>
+      <div class="header-actions">
+        <a class="phone js-phone js-phone-display" href="#">Телефон</a>
+        <a class="btn js-tg" href="#" target="_blank" rel="noopener">Написать</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="section">
+    <div class="container">
+      <h1>Цены на уборку</h1>
+      <p class="lead">Финальная стоимость зависит от площади, уровня загрязнения и дополнительных задач.</p>
+      <a class="btn btn-light" href="#calc">Рассчитать стоимость</a>
+      <div class="table-wrap">
+        <table class="price-table">
+          <thead>
+            <tr>
+              <th>Услуга</th>
+              <th>Цена</th>
+              <th>Описание</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Экспресс уборка</td>
+              <td>от 85 ₽/м²</td>
+              <td>Поддерживающая уборка основных зон</td>
+            </tr>
+            <tr>
+              <td>Генеральная уборка</td>
+              <td>от 115 ₽/м²</td>
+              <td>Глубокая очистка всех поверхностей и мебели</td>
+            </tr>
+            <tr>
+              <td>После ремонта</td>
+              <td>от 170 ₽/м²</td>
+              <td>Удаление строительной пыли и технических загрязнений</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <section class="calc-section section-sm" id="calc">
+        <div class="calc-shell">
+          <div>
+            <p class="label">Калькулятор стоимости</p>
+            <h2>Точный расчёт по площади и опциям</h2>
+            <p class="lead">Заполните форму, получите итог и сразу отправьте заявку в Telegram.</p>
+          </div>
+
+          <form class="calc-form js-calculator js-calc" novalidate>
+            <label class="calc-field">
+              <span>Площадь (м²)</span>
+              <input class="js-area" type="number" min="1" step="1" placeholder="Например, 75" required />
+            </label>
+
+            <fieldset class="calc-group">
+              <legend>Тип уборки</legend>
+              <label class="choice">
+                <input type="radio" name="cleaningType" value="Экспресс уборка" data-rate="85" checked />
+                <span>Экспресс — 85 ₽/м²</span>
+              </label>
+              <label class="choice">
+                <input type="radio" name="cleaningType" value="Генеральная уборка" data-rate="115" />
+                <span>Генеральная — 115 ₽/м²</span>
+              </label>
+              <label class="choice">
+                <input type="radio" name="cleaningType" value="После ремонта" data-rate="170" />
+                <span>После ремонта — 170 ₽/м²</span>
+              </label>
+            </fieldset>
+
+            <fieldset class="calc-group">
+              <legend>Опции</legend>
+              <label class="choice">
+                <input class="js-option" type="checkbox" value="500" data-label="Мытьё окон" />
+                <span>Мытьё окон +500 ₽</span>
+              </label>
+              <label class="choice">
+                <input class="js-option" type="checkbox" value="300" data-label="Духовка" />
+                <span>Духовка +300 ₽</span>
+              </label>
+              <label class="choice">
+                <input class="js-option" type="checkbox" value="300" data-label="Холодильник" />
+                <span>Холодильник +300 ₽</span>
+              </label>
+              <label class="choice">
+                <input class="js-option" type="checkbox" value="400" data-label="Доп. санузел" />
+                <span>Доп. санузел +400 ₽</span>
+              </label>
+            </fieldset>
+
+            <div class="calc-result">
+              <p>Итоговая стоимость</p>
+              <p class="calc-total js-total">0 ₽</p>
+            </div>
+
+            <p class="calc-error js-calc-error js-error" aria-live="polite"></p>
+
+            <button class="btn js-submit" type="submit">Отправить в Telegram</button>
+          </form>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-wrap">
+      <p>© 2026 Клининг Профессионалы</p>
+      <a href="contacts.html">Оставить заявку</a>
+    </div>
+  </footer>
+
+  <div class="messenger-widget" aria-label="Мессенджеры">
+    <a class="messenger-link tg js-tg" href="#" target="_blank" rel="noopener" aria-label="Telegram">TG</a>
+    <a class="messenger-link wa js-wa" href="#" target="_blank" rel="noopener" aria-label="WhatsApp">WA</a>
+    <a class="messenger-link vk js-vk" href="#" target="_blank" rel="noopener" aria-label="VK">VK</a>
+  </div>
+
+  <script src="assets/js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,6 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128" role="img" aria-label="Уборка после ремонта">
+  <rect width="128" height="128" rx="26" fill="#fffaf0"/>
+  <path d="M28 88l36-48 36 48H28z" fill="none" stroke="#b28f54" stroke-width="6" stroke-linejoin="round"/>
+  <rect x="54" y="72" width="20" height="16" rx="3" fill="#e8d4ad"/>
+  <path d="M58 40h12" stroke="#c9a76a" stroke-width="6" stroke-linecap="round"/>
+</svg>

@@ -1,0 +1,6 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128" role="img" aria-label="Генеральная уборка">
+  <rect width="128" height="128" rx="26" fill="#fffaf0"/>
+  <rect x="34" y="28" width="60" height="72" rx="10" fill="none" stroke="#b28f54" stroke-width="6"/>
+  <path d="M46 54h36M46 68h36M46 82h24" stroke="#c9a76a" stroke-width="6" stroke-linecap="round"/>
+  <circle cx="88" cy="96" r="10" fill="#e8d4ad"/>
+</svg>

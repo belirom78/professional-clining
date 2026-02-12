@@ -1,0 +1,14 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="900" viewBox="0 0 1200 900" role="img" aria-label="Кухня после уборки">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f8efde"/>
+      <stop offset="100%" stop-color="#fffdf8"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="900" fill="url(#bg)"/>
+  <rect x="80" y="140" width="1040" height="620" rx="30" fill="#fff" opacity=".84"/>
+  <rect x="120" y="180" width="360" height="280" rx="20" fill="#f9f3e8"/>
+  <rect x="500" y="180" width="580" height="170" rx="20" fill="#ffffff"/>
+  <text x="600" y="520" text-anchor="middle" font-size="82" fill="#8e6b38" font-family="Segoe UI, Arial">КУХНЯ ПРЕМИУМ</text>
+</svg>
+
