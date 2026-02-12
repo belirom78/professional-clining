@@ -1,4 +1,4 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
@@ -8,6 +8,8 @@
   <link rel="stylesheet" href="assets/css/style.css" />
 </head>
 <body>
+  <canvas class="particles-canvas" aria-hidden="true"></canvas>
+
   <header class="site-header">
     <div class="container header-wrap">
       <a class="logo" href="index.html">Клининг <span>Профессионалы</span></a>
@@ -32,6 +34,11 @@
   <main>
     <section class="hero parallax-wrapper">
       <div class="parallax-bg hero-bg js-parallax-bg" data-speed="0.4" aria-hidden="true"></div>
+      <div class="parallax-shapes js-parallax-bg" data-speed="0.2" aria-hidden="true">
+        <span class="shape shape-ring"></span>
+        <span class="shape shape-dot"></span>
+        <span class="shape shape-ring-sm"></span>
+      </div>
       <div class="parallax-decor" aria-hidden="true">
         <span class="parallax-blob decor-a js-parallax-decor" data-speed="0.7"></span>
         <span class="parallax-blob decor-b js-parallax-decor" data-speed="0.6"></span>
@@ -66,19 +73,19 @@
         <div class="container">
           <h2>Популярные услуги</h2>
           <div class="cards">
-            <article class="card">
+            <article class="card js-reveal">
               <img class="service-icon" src="assets/img/service-express.svg" alt="Иконка экспресс уборки" />
               <h3>Экспресс уборка</h3>
               <p>Поддерживающая уборка для регулярной свежести пространства.</p>
               <p class="price">от 85 ₽/м²</p>
             </article>
-            <article class="card">
+            <article class="card js-reveal">
               <img class="service-icon" src="assets/img/service-general.svg" alt="Иконка генеральной уборки" />
               <h3>Генеральная уборка</h3>
               <p>Глубокая очистка всех зон, включая сложные и труднодоступные места.</p>
               <p class="price">от 115 ₽/м²</p>
             </article>
-            <article class="card">
+            <article class="card js-reveal">
               <img class="service-icon" src="assets/img/service-renovation.svg" alt="Иконка уборки после ремонта" />
               <h3>После ремонта</h3>
               <p>Удаляем строительную пыль, следы смесей и готовим объект к заселению.</p>
@@ -90,13 +97,17 @@
     </section>
 
     <section class="section before-after-section" id="cases">
+      <div class="section-blob-wrap" aria-hidden="true">
+        <div class="section-blob section-blob-1"></div>
+        <div class="section-blob section-blob-2"></div>
+      </div>
       <div class="container">
         <p class="label">До / После</p>
         <h2>Результаты реальных уборок</h2>
         <p class="lead">Потяните ползунок на карточке и сравните состояние помещения до и после клининга.</p>
 
         <div class="ba-grid">
-          <article class="ba-card">
+          <article class="ba-card js-reveal">
             <h3>Кухня</h3>
             <p class="ba-note">Уборка после ремонта</p>
             <div class="ba-slider js-before-after" data-start="55">
@@ -106,13 +117,17 @@
               </div>
               <span class="ba-badge ba-badge-left">ДО</span>
               <span class="ba-badge ba-badge-right">ПОСЛЕ</span>
+              <div class="ba-tags" aria-hidden="true">
+                <span class="ba-tag">После ремонта</span>
+                <span class="ba-tag">3–4 ч</span>
+              </div>
               <div class="ba-divider" aria-hidden="true"></div>
               <input class="ba-range" type="range" min="0" max="100" value="55" aria-label="Сравнение до и после для кухни" />
             </div>
             <p class="ba-meta">Кухня • Генеральная • 3–4 часа</p>
           </article>
 
-          <article class="ba-card">
+          <article class="ba-card js-reveal">
             <h3>Санузел</h3>
             <p class="ba-note">Генеральная уборка</p>
             <div class="ba-slider js-before-after" data-start="50">
@@ -122,13 +137,17 @@
               </div>
               <span class="ba-badge ba-badge-left">ДО</span>
               <span class="ba-badge ba-badge-right">ПОСЛЕ</span>
+              <div class="ba-tags" aria-hidden="true">
+                <span class="ba-tag">Генеральная</span>
+                <span class="ba-tag">1–2 ч</span>
+              </div>
               <div class="ba-divider" aria-hidden="true"></div>
               <input class="ba-range" type="range" min="0" max="100" value="50" aria-label="Сравнение до и после для гостиной" />
             </div>
             <p class="ba-meta">Санузел • Генеральная • 1–2 часа</p>
           </article>
 
-          <article class="ba-card">
+          <article class="ba-card js-reveal">
             <h3>Душевая</h3>
             <p class="ba-note">Генеральная уборка</p>
             <div class="ba-slider js-before-after" data-start="45">
@@ -138,6 +157,10 @@
               </div>
               <span class="ba-badge ba-badge-left">ДО</span>
               <span class="ba-badge ba-badge-right">ПОСЛЕ</span>
+              <div class="ba-tags" aria-hidden="true">
+                <span class="ba-tag">Генеральная</span>
+                <span class="ba-tag">1–2 ч</span>
+              </div>
               <div class="ba-divider" aria-hidden="true"></div>
               <input class="ba-range" type="range" min="0" max="100" value="45" aria-label="Сравнение до и после для офиса" />
             </div>
@@ -151,7 +174,7 @@
     <span id="calculator" aria-hidden="true"></span>
     <section class="section calc-section" id="calc">
       <div class="container">
-        <div class="calc-shell">
+        <div class="calc-shell js-reveal">
           <div>
             <p class="label">Калькулятор стоимости</p>
             <h2>Рассчитайте уборку за минуту</h2>

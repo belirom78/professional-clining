@@ -1,10 +1,12 @@
-﻿const CONFIG = {
+const CONFIG = {
   tgUsername: 'USERNAME',
   waPhone: '70000000000',
   vkUrl: 'https://vk.com/USERNAME',
   phoneDisplay: '+7 (3812) 99-99-99',
   phoneTel: '+73812999999'
 };
+
+/* ---- Contact links ---- */
 
 const initContactLinks = () => {
   document.querySelectorAll('.js-tg').forEach((link) => {
@@ -30,6 +32,8 @@ const initContactLinks = () => {
 
 initContactLinks();
 
+/* ---- Mobile menu ---- */
+
 const menuButton = document.querySelector('.menu-toggle');
 const nav = document.querySelector('.nav');
 
@@ -40,23 +44,28 @@ if (menuButton && nav) {
   });
 }
 
+/* ---- Feature detection ---- */
+
 const isMobileViewport = window.matchMedia('(max-width: 768px)').matches;
 const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ---- Parallax (multi-layer + mouse move + blob wobble) ---- */
+
 const parallaxBackgrounds = document.querySelectorAll('.js-parallax-bg');
 const parallaxDecor = document.querySelectorAll('.js-parallax-decor');
 
 if ((parallaxBackgrounds.length || parallaxDecor.length) && !isMobileViewport && !prefersReducedMotion) {
-  let latestScrollY = 0;
+  let latestScrollY = window.scrollY;
   let ticking = false;
+  let mouseX = 0;
+  let mouseY = 0;
+  const startTime = performance.now();
+  let blobRafId = null;
 
-  const updateParallax = () => {
+  /* Scroll-based parallax for background layers */
+  const updateBackgrounds = () => {
     parallaxBackgrounds.forEach((element) => {
       const speed = Number(element.dataset.speed || 0.1);
-      const offset = Math.round(latestScrollY * speed);
-      element.style.transform = `translate3d(0, ${offset}px, 0)`;
-    });
-    parallaxDecor.forEach((element) => {
-      const speed = Number(element.dataset.speed || 0.7);
       const offset = Math.round(latestScrollY * speed);
       element.style.transform = `translate3d(0, ${offset}px, 0)`;
     });
@@ -66,15 +75,147 @@ if ((parallaxBackgrounds.length || parallaxDecor.length) && !isMobileViewport &&
   window.addEventListener('scroll', () => {
     latestScrollY = window.scrollY;
     if (!ticking) {
-      requestAnimationFrame(updateParallax);
+      requestAnimationFrame(updateBackgrounds);
       ticking = true;
     }
   }, { passive: true });
 
-  updateParallax();
+  /* Mouse move tracking for desktop (subtle depth effect) */
+  document.addEventListener('mousemove', (e) => {
+    mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
+    mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
+  }, { passive: true });
+
+  /* Continuous blob animation: drift + scroll offset + mouse influence */
+  const animateBlobs = () => {
+    const elapsed = (performance.now() - startTime) / 1000;
+
+    parallaxDecor.forEach((element, i) => {
+      const speed = Number(element.dataset.speed || 0.7);
+      const scrollOffset = Math.round(latestScrollY * speed);
+
+      /* Slow organic drift */
+      const driftX = Math.sin(elapsed * 0.35 + i * 2.1) * 16;
+      const driftY = Math.cos(elapsed * 0.28 + i * 1.7) * 11;
+      const driftScale = 1 + Math.sin(elapsed * 0.18 + i * 0.8) * 0.04;
+
+      /* Mouse influence (subtle) */
+      const mx = mouseX * 6 * (1 + i * 0.25);
+      const my = mouseY * 4 * (1 + i * 0.2);
+
+      element.style.transform =
+        `translate3d(${driftX + mx}px, ${scrollOffset + driftY + my}px, 0) scale(${driftScale.toFixed(3)})`;
+    });
+
+    blobRafId = requestAnimationFrame(animateBlobs);
+  };
+
+  animateBlobs();
+  updateBackgrounds();
+
+  /* Pause animation when tab is hidden */
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+      cancelAnimationFrame(blobRafId);
+    } else {
+      animateBlobs();
+    }
+  });
 }
 
-const formatRub = (value) => `${new Intl.NumberFormat('ru-RU').format(value)} ₽`;
+/* ---- Particle dot field ---- */
+
+(function initParticles() {
+  const canvas = document.querySelector('.particles-canvas');
+  if (!canvas || isMobileViewport || prefersReducedMotion) return;
+
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return;
+
+  const particleCount = 35;
+  let particles = [];
+  let animId = null;
+
+  function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+
+  function seed() {
+    particles = [];
+    for (let i = 0; i < particleCount; i++) {
+      particles.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        r: Math.random() * 1.6 + 0.4,
+        dx: (Math.random() - 0.5) * 0.25,
+        dy: (Math.random() - 0.5) * 0.18,
+        o: Math.random() * 0.25 + 0.06
+      });
+    }
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    for (const p of particles) {
+      p.x += p.dx;
+      p.y += p.dy;
+      if (p.x < -10) p.x = canvas.width + 10;
+      if (p.x > canvas.width + 10) p.x = -10;
+      if (p.y < -10) p.y = canvas.height + 10;
+      if (p.y > canvas.height + 10) p.y = -10;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(0, 201, 183, ${p.o})`;
+      ctx.fill();
+    }
+    animId = requestAnimationFrame(draw);
+  }
+
+  resize();
+  seed();
+  draw();
+
+  window.addEventListener('resize', () => { resize(); seed(); }, { passive: true });
+
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+      cancelAnimationFrame(animId);
+    } else {
+      draw();
+    }
+  });
+})();
+
+/* ---- Scroll reveal (IntersectionObserver) ---- */
+
+(function initScrollReveal() {
+  const reveals = document.querySelectorAll('.js-reveal');
+  if (!reveals.length) return;
+
+  if (prefersReducedMotion) {
+    reveals.forEach((el) => el.classList.add('revealed'));
+    return;
+  }
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('revealed');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, {
+    threshold: 0.08,
+    rootMargin: '0px 0px -40px 0px'
+  });
+
+  reveals.forEach((el) => observer.observe(el));
+})();
+
+/* ---- Calculator ---- */
+
+const formatRub = (value) => `${new Intl.NumberFormat('ru-RU').format(value)} \u20BD`;
 
 const calculators = document.querySelectorAll('.js-calc');
 
@@ -116,7 +257,7 @@ calculators.forEach((calc) => {
     const validationError = validateArea(area);
 
     if (validationError) {
-      totalOutput.textContent = '0 ₽';
+      totalOutput.textContent = '0 \u20BD';
       return { valid: false, error: validationError, area: 0, rate, total: 0, type: selectedType?.value || '' };
     }
 
@@ -164,6 +305,8 @@ calculators.forEach((calc) => {
 
   calculate();
 });
+
+/* ---- Before / After sliders ---- */
 
 const beforeAfterSliders = document.querySelectorAll('.js-before-after');
 
