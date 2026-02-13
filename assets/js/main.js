@@ -62,12 +62,20 @@ if ((parallaxBackgrounds.length || parallaxDecor.length) && !isMobileViewport &&
   const startTime = performance.now();
   let blobRafId = null;
 
-  /* Scroll-based parallax for background layers */
+  /* Smoothed mouse values for easing */
+  let smoothMouseX = 0;
+  let smoothMouseY = 0;
+  const mouseEasing = 0.08;
+
+  /* Scroll-based parallax for background layers — AGAINST scroll, stronger amplitude */
   const updateBackgrounds = () => {
     parallaxBackgrounds.forEach((element) => {
       const speed = Number(element.dataset.speed || 0.1);
-      const offset = Math.round(latestScrollY * speed);
-      element.style.transform = `translate3d(0, ${offset}px, 0)`;
+      /* Move AGAINST scroll direction (negative offset) with 2x amplitude */
+      const offset = Math.round(latestScrollY * speed * -2);
+      const scaleVal = 1 + Math.abs(latestScrollY * 0.00003) * speed;
+      const clampedScale = Math.min(scaleVal, 1.08);
+      element.style.transform = `translate3d(0, ${offset}px, 0) scale(${clampedScale.toFixed(4)})`;
     });
     ticking = false;
   };
@@ -80,31 +88,43 @@ if ((parallaxBackgrounds.length || parallaxDecor.length) && !isMobileViewport &&
     }
   }, { passive: true });
 
-  /* Mouse move tracking for desktop (subtle depth effect) */
+  /* Mouse move tracking for desktop (stronger depth effect) */
   document.addEventListener('mousemove', (e) => {
     mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
     mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
   }, { passive: true });
 
-  /* Continuous blob animation: drift + scroll offset + mouse influence */
+  /* Continuous blob animation: drift + scroll offset + mouse influence — enhanced */
   const animateBlobs = () => {
     const elapsed = (performance.now() - startTime) / 1000;
 
+    /* Smooth mouse easing for fluid movement */
+    smoothMouseX += (mouseX - smoothMouseX) * mouseEasing;
+    smoothMouseY += (mouseY - smoothMouseY) * mouseEasing;
+
     parallaxDecor.forEach((element, i) => {
       const speed = Number(element.dataset.speed || 0.7);
-      const scrollOffset = Math.round(latestScrollY * speed);
+      /* Move AGAINST scroll with doubled amplitude */
+      const scrollOffset = Math.round(latestScrollY * speed * -2);
 
-      /* Slow organic drift */
-      const driftX = Math.sin(elapsed * 0.35 + i * 2.1) * 16;
-      const driftY = Math.cos(elapsed * 0.28 + i * 1.7) * 11;
-      const driftScale = 1 + Math.sin(elapsed * 0.18 + i * 0.8) * 0.04;
+      /* Stronger organic drift (2x amplitude) */
+      const driftX = Math.sin(elapsed * 0.35 + i * 2.1) * 32;
+      const driftY = Math.cos(elapsed * 0.28 + i * 1.7) * 22;
+      const driftScale = 1 + Math.sin(elapsed * 0.18 + i * 0.8) * 0.06;
+      /* Scale pulse between 1.05 and 1.08 based on scroll */
+      const scrollScale = 1.05 + Math.sin(elapsed * 0.12 + i) * 0.015;
+      const combinedScale = driftScale * scrollScale;
+      const clampedScale = Math.min(Math.max(combinedScale, 1.0), 1.08);
 
-      /* Mouse influence (subtle) */
-      const mx = mouseX * 6 * (1 + i * 0.25);
-      const my = mouseY * 4 * (1 + i * 0.2);
+      /* Stronger mouse influence (3x previous) */
+      const mx = smoothMouseX * 18 * (1 + i * 0.35);
+      const my = smoothMouseY * 12 * (1 + i * 0.3);
+
+      /* Slight rotation for organic feel */
+      const rotation = Math.sin(elapsed * 0.2 + i * 1.5) * 3;
 
       element.style.transform =
-        `translate3d(${driftX + mx}px, ${scrollOffset + driftY + my}px, 0) scale(${driftScale.toFixed(3)})`;
+        `translate3d(${driftX + mx}px, ${scrollOffset + driftY + my}px, 0) scale(${clampedScale.toFixed(3)}) rotate(${rotation.toFixed(1)}deg)`;
     });
 
     blobRafId = requestAnimationFrame(animateBlobs);
@@ -332,3 +352,34 @@ beforeAfterSliders.forEach((slider) => {
     updatePosition(range.value);
   });
 });
+
+/* ---- Accordion (FAQ & included sections) ---- */
+
+(function initAccordion() {
+  const accordions = document.querySelectorAll('.js-accordion');
+  if (!accordions.length) return;
+
+  accordions.forEach((accordion) => {
+    const triggers = accordion.querySelectorAll('.accordion-trigger');
+
+    triggers.forEach((trigger) => {
+      trigger.addEventListener('click', () => {
+        const panel = trigger.nextElementSibling;
+        const isOpen = trigger.getAttribute('aria-expanded') === 'true';
+
+        /* Close all panels in this accordion */
+        triggers.forEach((otherTrigger) => {
+          const otherPanel = otherTrigger.nextElementSibling;
+          otherTrigger.setAttribute('aria-expanded', 'false');
+          if (otherPanel) otherPanel.hidden = true;
+        });
+
+        /* Toggle clicked panel */
+        if (!isOpen && panel) {
+          trigger.setAttribute('aria-expanded', 'true');
+          panel.hidden = false;
+        }
+      });
+    });
+  });
+})();
