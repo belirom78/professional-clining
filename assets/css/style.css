@@ -169,7 +169,7 @@ a {
 .hero-bg {
   background:
     linear-gradient(92deg, rgba(20, 40, 38, 0.72) 0%, rgba(20, 40, 38, 0.58) 40%, rgba(20, 40, 38, 0.38) 70%, rgba(20, 40, 38, 0.22) 100%),
-    url("../img/hero/hero-sofa.jpg") center center/cover no-repeat;
+    url("../img/hero/hero-sofa.png") center center/cover no-repeat;
   transform: scale(1.02);
   transform-origin: center;
   animation: heroZoom 14s ease-in-out infinite alternate;
