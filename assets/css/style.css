@@ -1064,36 +1064,10 @@ h2 {
 }
 
 .arsenal-text p {
-  color: var(--muted);
-  font-size: 1.04rem;
-  line-height: 1.75;
-  margin: 0 0 24px;
-}
-
-.arsenal-features {
-  list-style: none;
+  color: #4a4a4a;
+  font-size: 1.06rem;
+  line-height: 1.6;
   margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
-
-.arsenal-features li {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  font-size: 1rem;
-  line-height: 1.6;
-  color: var(--text);
-  font-weight: 500;
-}
-
-.arsenal-features li::before {
-  content: "\2705";
-  flex-shrink: 0;
-  font-size: 1.1rem;
-  line-height: 1.6;
 }
 
 @media (max-width: 980px) {
