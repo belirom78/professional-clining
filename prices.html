@@ -25,38 +25,107 @@
     </div>
   </header>
 
-  <main class="section">
+  <main>
+    <section class="section">
     <div class="container">
+      <p class="label">Стоимость</p>
       <h1>Цены на уборку</h1>
-      <p class="lead">Финальная стоимость зависит от площади, уровня загрязнения и дополнительных задач.</p>
-      <a class="btn btn-light" href="#calc">Рассчитать стоимость</a>
-      <div class="table-wrap">
+      <p class="lead">Финальная стоимость зависит от площади, уровня загрязнения и дополнительных задач. Все цены фиксированные — никаких скрытых доплат.</p>
+      <a class="btn btn-light" href="#calc" style="margin-bottom: 24px;">Рассчитать стоимость</a>
+
+      <h2 class="js-reveal">Основные услуги</h2>
+      <div class="table-wrap js-reveal">
         <table class="price-table">
           <thead>
             <tr>
               <th>Услуга</th>
               <th>Цена</th>
+              <th>Время</th>
               <th>Описание</th>
             </tr>
           </thead>
           <tbody>
             <tr>
               <td>Экспресс уборка</td>
-              <td>от 85 ₽/м²</td>
+              <td><strong>от 85 ₽/м²</strong></td>
+              <td>1.5 — 2.5 ч</td>
               <td>Поддерживающая уборка основных зон</td>
             </tr>
             <tr>
               <td>Генеральная уборка</td>
-              <td>от 115 ₽/м²</td>
+              <td><strong>от 115 ₽/м²</strong></td>
+              <td>3 — 5 ч</td>
               <td>Глубокая очистка всех поверхностей и мебели</td>
             </tr>
             <tr>
               <td>После ремонта</td>
-              <td>от 170 ₽/м²</td>
+              <td><strong>от 170 ₽/м²</strong></td>
+              <td>5 — 8 ч</td>
               <td>Удаление строительной пыли и технических загрязнений</td>
             </tr>
           </tbody>
         </table>
+      </div>
+
+      <div class="extras-section">
+        <h2 class="js-reveal">Дополнительные услуги</h2>
+        <div class="table-wrap js-reveal">
+          <table class="price-table">
+            <thead>
+              <tr>
+                <th>Услуга</th>
+                <th>Цена</th>
+                <th>Примечание</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Мытьё окон (1 окно)</td>
+                <td><strong>500 ₽</strong></td>
+                <td>Рамы + стёкла с двух сторон</td>
+              </tr>
+              <tr>
+                <td>Чистка духовки</td>
+                <td><strong>300 ₽</strong></td>
+                <td>Внутри и снаружи</td>
+              </tr>
+              <tr>
+                <td>Чистка холодильника</td>
+                <td><strong>300 ₽</strong></td>
+                <td>Внутри и снаружи, размораживание не входит</td>
+              </tr>
+              <tr>
+                <td>Дополнительный санузел</td>
+                <td><strong>400 ₽</strong></td>
+                <td>Полная уборка и дезинфекция</td>
+              </tr>
+              <tr>
+                <td>Мытьё люстры (1 шт.)</td>
+                <td><strong>250 ₽</strong></td>
+                <td>Подвесная / потолочная</td>
+              </tr>
+              <tr>
+                <td>Химчистка дивана</td>
+                <td><strong>от 1 500 ₽</strong></td>
+                <td>Зависит от размера</td>
+              </tr>
+              <tr>
+                <td>Химчистка матраса</td>
+                <td><strong>от 1 000 ₽</strong></td>
+                <td>Односпальный / двуспальный</td>
+              </tr>
+              <tr>
+                <td>Глажка белья (1 час)</td>
+                <td><strong>400 ₽</strong></td>
+                <td>С предоставлением утюга</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="price-note js-reveal">
+        <strong>Важно:</strong> Указанные цены являются ориентировочными. Точная стоимость рассчитывается после уточнения площади, состояния помещения и списка задач. Минимальный заказ — 2 000 ₽. Выезд за пределы Омска оплачивается дополнительно.
       </div>
 
       <section class="calc-section section-sm" id="calc">
@@ -121,6 +190,7 @@
         </div>
       </section>
     </div>
+    </section>
   </main>
 
   <footer class="site-footer">
