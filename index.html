@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Клининг Профессионалы — Омск и область</title>
-  <meta name="description" content="Профессиональный клининг в Омске и области: квартиры, дома, офисы. Быстро, аккуратно, с премиальным сервисом." />
+  <title>BelClean — Клининг в Волжском и Волгоградской области</title>
+  <meta name="description" content="Профессиональный клининг в Волжском и Волгоградской области: квартиры, дома, офисы. Быстро, аккуратно, с гарантией качества." />
   <link rel="stylesheet" href="assets/css/style.css" />
 </head>
 <body>
@@ -12,7 +12,12 @@
 
   <header class="site-header">
     <div class="container header-wrap">
-      <a class="logo" href="index.html">Клининг <span>Профессионалы</span></a>
+      <a class="logo" href="index.html" aria-label="BelClean">
+        <span class="logo-mark" aria-hidden="true">B</span>
+        <span class="logo-word">
+          <span class="logo-word-dark">BEL</span><span class="logo-word-accent">CLEAN</span>
+        </span>
+      </a>
 
       <button class="menu-toggle" aria-label="Открыть меню" aria-expanded="false">☰</button>
 
@@ -20,13 +25,15 @@
         <a href="index.html#about">О нас</a>
         <a href="services.html">Услуги</a>
         <a href="prices.html">Цены</a>
-        <a href="#calc">Калькулятор</a>
+        <a href="#cases">До/После</a>
         <a href="contacts.html">Контакты</a>
+        <a class="nav-contact-link js-phone" href="#">Позвонить</a>
+        <a class="nav-contact-link js-tg" href="#" target="_blank" rel="noopener">Написать в Telegram</a>
       </nav>
 
       <div class="header-actions">
         <a class="phone js-phone js-phone-display" href="#">Телефон</a>
-        <a class="btn js-tg" href="#" target="_blank" rel="noopener">Написать</a>
+        <a class="btn btn-header" href="#calc">Оставить заявку</a>
       </div>
     </div>
   </header>
@@ -46,18 +53,94 @@
       </div>
       <div class="content-layer">
         <div class="container hero-grid">
-          <div>
-            <p class="label">Омск и область</p>
-            <h1>Премиальный клининг для дома и бизнеса</h1>
-            <p class="lead">Чистота без компромиссов: обученные специалисты, деликатные средства, фиксированные цены и контроль качества после каждой уборки.</p>
+          <div class="hero-copy hero-content">
+            <p class="label">Волжский и Волгоградская область</p>
+            <h1>Профессиональная уборка квартир, домов и офисов</h1>
+            <p class="lead">Быстро приводим пространство в порядок: поддерживающая, генеральная уборка и уборка после ремонта. Работаем аккуратно, со своей техникой и понятной стоимостью.</p>
             <div class="hero-actions">
-              <a class="btn" href="services.html">Выбрать услугу</a>
-              <a class="btn btn-light" href="prices.html">Смотреть цены</a>
+              <a class="btn" href="#calc">Рассчитать стоимость</a>
+              <a class="btn btn-light js-phone" href="#">Позвонить</a>
+              <a class="btn btn-light btn-telegram js-tg" href="#" target="_blank" rel="noopener">Написать в Telegram</a>
+            </div>
+            <div class="hero-availability">
+              <p>Работаем ежедневно с 8:00 до 22:00</p>
+              <div class="hero-availability-links">
+                <a class="hero-availability-link is-phone js-phone" href="#">TEL</a>
+                <a class="hero-availability-link is-tg js-tg" href="#" target="_blank" rel="noopener">TG</a>
+              </div>
+            </div>
+            <form class="hero-lead-form js-hero-lead-form" action="send.php" method="post" novalidate>
+              <div class="hero-lead-grid">
+                <label class="hero-lead-field">
+                  <span>Имя</span>
+                  <input type="text" name="name" class="js-hero-name" placeholder="Ваше имя" autocomplete="name" required />
+                </label>
+                <label class="hero-lead-field">
+                  <span>Телефон</span>
+                  <input type="tel" name="phone" class="js-hero-phone" placeholder="+7 (___) ___-__-__" inputmode="tel" autocomplete="tel" required />
+                </label>
+              </div>
+              <input type="hidden" name="source" value="hero" />
+              <input type="hidden" name="page" value="main" />
+              <input type="hidden" name="form_type" value="hero_lead" />
+              <input type="hidden" name="callback_requested" value="1" />
+              <input type="hidden" name="comment" value="Быстрая заявка с первого экрана" />
+              <label class="form-honeypot" aria-hidden="true">
+                <span>Не заполняйте это поле</span>
+                <input type="text" name="website" tabindex="-1" autocomplete="off" />
+              </label>
+              <p class="hero-lead-error js-hero-error" aria-live="polite"></p>
+              <button class="btn hero-lead-submit js-hero-submit" type="submit">Получить расчёт</button>
+              <p class="hero-lead-note">Свяжемся с вами в течение 15 минут</p>
+              <div class="contact-direct contact-direct-compact">
+                <p>Или свяжитесь с нами напрямую:</p>
+                <div class="messenger-buttons contact-direct-buttons">
+                  <a class="messenger-btn messenger-btn-call js-phone" href="#">Позвонить</a>
+                  <a class="messenger-btn messenger-btn-tg js-tg" href="#" target="_blank" rel="noopener">Telegram</a>
+                </div>
+              </div>
+              <p class="hero-lead-success js-hero-success" aria-live="polite" hidden>Заявка отправлена. Скоро свяжемся.</p>
+            </form>
+            <div class="hero-points">
+              <article class="hero-point js-reveal">
+                <span class="hero-point-icon" aria-hidden="true">✔</span>
+                <div>
+                  <strong>Безопасные средства</strong>
+                </div>
+              </article>
+              <article class="hero-point js-reveal">
+                <span class="hero-point-icon" aria-hidden="true">✔</span>
+                <div>
+                  <strong>Своя техника</strong>
+                </div>
+              </article>
+              <article class="hero-point js-reveal">
+                <span class="hero-point-icon" aria-hidden="true">✔</span>
+                <div>
+                  <strong>Честная цена</strong>
+                </div>
+              </article>
             </div>
           </div>
-          <div class="hero-note">
-            <h2>Бережный подход</h2>
-            <p>Работаем с квартирами, частными домами и офисами. Подбираем формат уборки под ваш график и задачи.</p>
+          <div class="hero-visual hero-image js-reveal">
+            <div class="hero-photo-frame">
+              <img class="hero-photo" src="assets/img/hero-cleaning.png" alt="Клининг в Волжском" />
+            </div>
+            <div class="hero-floating-card">
+              <p class="hero-floating-kicker">Современный сервис</p>
+              <h2>Чистый результат без долгих согласований</h2>
+              <p>Быстро принимаем заявку, выезжаем со своей техникой и доводим уборку до аккуратного финала.</p>
+              <div class="hero-metrics">
+                <div class="hero-metric">
+                  <strong>15 мин</strong>
+                  <span>среднее время ответа</span>
+                </div>
+                <div class="hero-metric">
+                  <strong>98%</strong>
+                  <span>довольных клиентов</span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -71,25 +154,42 @@
       </div>
       <div class="content-layer">
         <div class="container">
+          <p class="label">Услуги</p>
           <h2>Популярные услуги</h2>
+          <p class="lead section-lead">Три самых востребованных формата уборки для квартиры, дома и коммерческих помещений.</p>
           <div class="cards">
-            <article class="card js-reveal">
-              <img class="service-icon" src="assets/img/service-express.svg" alt="Иконка экспресс уборки" />
+            <article class="card service-card js-reveal">
+              <div class="service-card-media">
+                <img class="service-icon" src="assets/img/service-express.svg" alt="Иконка экспресс уборки" />
+              </div>
               <h3>Экспресс уборка</h3>
-              <p>Поддерживающая уборка для регулярной свежести пространства.</p>
-              <p class="price">от 85 ₽/м²</p>
+              <p>Поддерживающая уборка для регулярной свежести пространства и аккуратного ежедневного порядка.</p>
+              <div class="service-card-footer">
+                <p class="price">от 85 ₽/м²</p>
+                <a class="service-link" href="services.html">Подробнее</a>
+              </div>
             </article>
-            <article class="card js-reveal">
-              <img class="service-icon" src="assets/img/service-general.svg" alt="Иконка генеральной уборки" />
+            <article class="card service-card js-reveal">
+              <div class="service-card-media">
+                <img class="service-icon" src="assets/img/service-general.svg" alt="Иконка генеральной уборки" />
+              </div>
               <h3>Генеральная уборка</h3>
-              <p>Глубокая очистка всех зон, включая сложные и труднодоступные места.</p>
-              <p class="price">от 115 ₽/м²</p>
+              <p>Глубокая очистка всех зон, включая сложные участки, кухню, санузлы и труднодоступные места.</p>
+              <div class="service-card-footer">
+                <p class="price">от 115 ₽/м²</p>
+                <a class="service-link" href="services.html">Подробнее</a>
+              </div>
             </article>
-            <article class="card js-reveal">
-              <img class="service-icon" src="assets/img/service-renovation.svg" alt="Иконка уборки после ремонта" />
+            <article class="card service-card js-reveal">
+              <div class="service-card-media">
+                <img class="service-icon" src="assets/img/service-renovation.svg" alt="Иконка уборки после ремонта" />
+              </div>
               <h3>После ремонта</h3>
-              <p>Удаляем строительную пыль, следы смесей и готовим объект к заселению.</p>
-              <p class="price">от 170 ₽/м²</p>
+              <p>Удаляем строительную пыль, следы смесей и подготавливаем объект к комфортному заселению.</p>
+              <div class="service-card-footer">
+                <p class="price">от 170 ₽/м²</p>
+                <a class="service-link" href="services.html">Подробнее</a>
+              </div>
             </article>
           </div>
         </div>
@@ -98,14 +198,20 @@
 
     <!-- О компании (расширенный) -->
     <section class="section company-stats-section" id="company">
-      <div class="container">
-        <p class="label">О компании</p>
-        <h2 class="js-reveal">Клининг Профессионалы — ваш надёжный партнёр</h2>
-        <p class="lead js-reveal">Мы работаем в Омске и Омской области, обеспечивая безупречную чистоту жилых и коммерческих пространств. Каждый клиент получает индивидуальный подход, прозрачные цены и гарантию результата.</p>
+      <div class="container company-shell">
+        <div class="company-copy">
+          <p class="label">О компании</p>
+          <h2 class="js-reveal">BelClean — чистота без лишних хлопот</h2>
+          <p class="lead js-reveal">Работаем в Волжском и Волгоградской области. Помогаем быстро и аккуратно привести в порядок квартиры, дома и помещения после ремонта.</p>
+          <div class="company-notes">
+            <div class="company-note js-reveal">Фиксируем объём работ, чтобы вы заранее понимали итог.</div>
+            <div class="company-note js-reveal">Подбираем формат уборки под график семьи, офиса или объекта после ремонта.</div>
+          </div>
+        </div>
         <div class="stats-grid">
           <div class="stat-card js-reveal">
             <span class="stat-number">500+</span>
-            <span class="stat-label">Выполненных заказов</span>
+            <span class="stat-label">заказов</span>
           </div>
           <div class="stat-card js-reveal">
             <span class="stat-number">98%</span>
@@ -113,11 +219,11 @@
           </div>
           <div class="stat-card js-reveal">
             <span class="stat-number">3 года</span>
-            <span class="stat-label">На рынке</span>
+            <span class="stat-label">опыта</span>
           </div>
           <div class="stat-card js-reveal">
             <span class="stat-number">15+</span>
-            <span class="stat-label">Специалистов в команде</span>
+            <span class="stat-label">объектов в работе</span>
           </div>
         </div>
       </div>
@@ -128,6 +234,7 @@
       <div class="container">
         <p class="label">Преимущества</p>
         <h2 class="js-reveal">Почему выбирают нас</h2>
+        <p class="lead section-lead js-reveal">Премиальный сервис складывается из точных деталей: дисциплины, заботы о материалах и прозрачной коммуникации.</p>
         <div class="why-grid">
           <article class="why-card js-reveal">
             <div class="why-icon">
@@ -177,15 +284,20 @@
 
     <!-- Технологии и безопасность -->
     <section class="section arsenal-section">
-      <div class="container">
-        <p class="label">Оборудование</p>
-        <h2 class="js-reveal">Технологии и безопасность</h2>
-        <div class="arsenal-grid js-reveal">
-          <div class="arsenal-image">
+      <div class="container arsenal-shell">
+        <div class="arsenal-grid">
+          <div class="arsenal-image js-reveal">
             <img src="assets/img/equipment.png" alt="Профессиональное оборудование и химия для клининга" />
           </div>
-          <div class="arsenal-text">
-            <p>Для ухода за вашим домом мы выбрали немецкую технику K&auml;rcher и сертифицированные средства Kiehl и Dr. Schnell. Это не просто «химия», а профессиональные биоразлагаемые составы. Они справляются со сложными загрязнениями, оставаясь полностью безопасными для детей, аллергиков и домашних животных. Мы гарантируем, что ваша мебель и покрытия сохранят свой вид.</p>
+          <div class="arsenal-text js-reveal">
+            <p class="label">Оборудование</p>
+            <h2>Технологии и безопасность</h2>
+            <p>Для ухода за вашим домом мы используем профессиональную технику K&auml;rcher и сертифицированные средства Kiehl и Dr. Schnell. Это продуманный набор для сложных загрязнений, деликатных поверхностей и повседневной чистоты без лишнего риска.</p>
+            <ul class="arsenal-list">
+              <li>Профессиональная техника для стабильного результата</li>
+              <li>Безопасные составы для дома, детей и животных</li>
+              <li>Бережный уход за мебелью, стеклом и покрытиями</li>
+            </ul>
           </div>
         </div>
       </div>
@@ -200,6 +312,7 @@
       <div class="container">
         <p class="label">Процесс</p>
         <h2 class="js-reveal">Как мы работаем</h2>
+        <p class="lead section-lead js-reveal">Пять понятных шагов от первой заявки до финальной приёмки результата.</p>
         <div class="steps-timeline">
           <div class="step-item js-reveal">
             <div class="step-number">1</div>
@@ -346,8 +459,8 @@
       </div>
       <div class="container">
         <p class="label">До / После</p>
-        <h2>Результаты реальных уборок</h2>
-        <p class="lead">Потяните ползунок на карточке и сравните состояние помещения до и после клининга.</p>
+        <h2>Результаты наших работ</h2>
+        <p class="lead">Сравните состояние помещений до и после уборки.</p>
 
         <div class="ba-grid">
           <article class="ba-card js-reveal">
@@ -419,6 +532,7 @@
       <div class="container">
         <p class="label">Вопросы и ответы</p>
         <h2 class="js-reveal">Часто задаваемые вопросы</h2>
+        <p class="lead section-lead js-reveal">Собрали ответы на частые вопросы о процессе, сроках и формате работы.</p>
         <div class="faq-grid js-accordion">
           <div class="accordion-item js-reveal">
             <button class="accordion-trigger" aria-expanded="false">
@@ -485,11 +599,11 @@
           </div>
           <div class="accordion-item js-reveal">
             <button class="accordion-trigger" aria-expanded="false">
-              <span>Выезжаете ли вы за пределы Омска?</span>
+              <span>Выезжаете ли вы за пределы Волжского?</span>
               <svg class="accordion-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
             </button>
             <div class="accordion-panel" hidden>
-              <p>Да, мы обслуживаем Омск и Омскую область. Выезд за пределы города обсуждается индивидуально, в зависимости от расстояния.</p>
+              <p>Да, мы обслуживаем Волжский и Волгоградскую область. Выезд за пределы города обсуждается индивидуально, в зависимости от расстояния.</p>
             </div>
           </div>
         </div>
@@ -500,11 +614,12 @@
     <section class="section cta-section">
       <div class="container">
         <div class="cta-block js-reveal">
-          <h2>Готовы к идеальной чистоте?</h2>
-          <p>Оставьте заявку прямо сейчас и получите расчёт стоимости за 5 минут. Первая уборка — со скидкой 10%.</p>
+          <p class="label">Быстрый старт</p>
+          <h2>Оставьте заявку и получите расчёт стоимости</h2>
+          <p>Ответим, уточним задачу и подберём удобное время уборки.</p>
           <div class="cta-actions">
-            <a class="btn btn-cta" href="#calc">Рассчитать стоимость</a>
-            <a class="btn btn-cta-light js-wa" href="#" target="_blank" rel="noopener">Написать в WhatsApp</a>
+            <a class="btn btn-cta js-tg" href="#" target="_blank" rel="noopener">Написать в Telegram</a>
+            <a class="btn btn-cta-light js-phone" href="#">Позвонить</a>
           </div>
         </div>
       </div>
@@ -569,7 +684,122 @@
 
             <p class="calc-error js-calc-error js-error" aria-live="polite"></p>
 
-            <button class="btn js-submit" type="submit">Отправить в Telegram</button>
+            <button class="btn js-submit" type="submit">Оставить заявку</button>
+          </form>
+        </div>
+
+        <div class="order-shell js-order-shell" id="order-form" hidden>
+          <div class="order-summary">
+            <p class="label">Ваш расчёт</p>
+            <h3>Проверьте детали перед отправкой заявки</h3>
+            <div class="order-summary-grid">
+              <div class="order-summary-item">
+                <span>Площадь</span>
+                <strong class="js-summary-area">0 м²</strong>
+              </div>
+              <div class="order-summary-item">
+                <span>Тип</span>
+                <strong class="js-summary-type">Не выбран</strong>
+              </div>
+              <div class="order-summary-item order-summary-item-wide">
+                <span>Опции</span>
+                <strong class="js-summary-options">Без доп. опций</strong>
+              </div>
+              <div class="order-summary-item">
+                <span>Итог</span>
+                <strong class="js-summary-total">0 ₽</strong>
+              </div>
+            </div>
+          </div>
+
+          <form class="order-form js-order-form" action="send.php" method="post" novalidate>
+            <div class="order-form-head">
+              <p class="label">Форма заявки</p>
+              <h3>Оставьте контакты, и мы подтвердим уборку</h3>
+              <p>Ответим, уточним детали заказа и предложим удобное время выезда.</p>
+            </div>
+
+            <div class="order-form-grid">
+              <label class="order-field">
+                <span>Ваше имя</span>
+                <input type="text" name="name" class="js-order-name" placeholder="Как к вам обращаться" autocomplete="name" required />
+                <span class="order-field-error js-order-name-error" aria-live="polite"></span>
+              </label>
+
+              <label class="order-field">
+                <span>Телефон</span>
+                <input type="tel" name="phone" class="js-order-phone" placeholder="+7 (___) ___-__-__" inputmode="tel" autocomplete="tel" required />
+                <span class="order-field-error js-order-phone-error" aria-live="polite"></span>
+              </label>
+
+              <label class="order-field">
+                <span>Адрес или район</span>
+                <input type="text" name="address" placeholder="Например, 37 мкр, Волжский" />
+              </label>
+
+              <label class="order-field">
+                <span>Тип помещения</span>
+                <select name="room_type" class="js-order-room-type">
+                  <option value="Квартира" selected>Квартира</option>
+                  <option value="Дом">Дом</option>
+                  <option value="Офис">Офис</option>
+                  <option value="Коммерческое помещение">Коммерческое помещение</option>
+                  <option value="После ремонта">После ремонта</option>
+                </select>
+              </label>
+
+              <label class="order-field">
+                <span>Дата уборки</span>
+                <input type="date" name="preferred_date" class="js-order-date" required />
+                <span class="order-field-error js-order-date-error" aria-live="polite"></span>
+              </label>
+
+              <label class="order-field">
+                <span>Удобное время</span>
+                <select name="preferred_time" class="js-order-time" required>
+                  <option value="">Выберите интервал</option>
+                  <option value="08:00–10:00">08:00–10:00</option>
+                  <option value="10:00–12:00">10:00–12:00</option>
+                  <option value="12:00–14:00">12:00–14:00</option>
+                  <option value="14:00–16:00">14:00–16:00</option>
+                  <option value="16:00–18:00">16:00–18:00</option>
+                  <option value="18:00–20:00">18:00–20:00</option>
+                </select>
+                <span class="order-field-error js-order-time-error" aria-live="polite"></span>
+              </label>
+
+              <label class="order-field order-field-wide">
+                <span>Комментарий</span>
+                <textarea name="comment" rows="4" placeholder="Расскажите о задаче, доступе на объект или пожеланиях к уборке"></textarea>
+              </label>
+
+              <label class="order-toggle order-field-wide">
+                <input type="checkbox" name="callback_requested" value="yes" class="js-order-callback" />
+                <span>Нужен обратный звонок</span>
+              </label>
+            </div>
+
+            <input type="hidden" name="area" class="js-order-area" />
+            <input type="hidden" name="cleaning_type" class="js-order-type" />
+            <input type="hidden" name="options" class="js-order-options" />
+            <input type="hidden" name="total" class="js-order-total" />
+            <label class="form-honeypot" aria-hidden="true">
+              <span>Не заполняйте это поле</span>
+              <input type="text" name="website" tabindex="-1" autocomplete="off" />
+            </label>
+
+            <p class="order-error js-order-error" aria-live="polite"></p>
+            <p class="order-success js-order-success" aria-live="polite" hidden>Заявка отправлена. Мы свяжемся с вами в ближайшее время.</p>
+            <p class="order-note">Мы свяжемся с вами в ближайшее время и уточним детали.</p>
+            <div class="contact-direct">
+              <p>Или свяжитесь с нами напрямую:</p>
+              <div class="messenger-buttons contact-direct-buttons">
+                <a class="messenger-btn messenger-btn-call js-phone" href="#">Позвонить</a>
+                <a class="messenger-btn messenger-btn-tg js-tg" href="#" target="_blank" rel="noopener">Telegram</a>
+              </div>
+            </div>
+
+            <button class="btn order-submit js-order-submit" type="submit">Отправить заявку</button>
           </form>
         </div>
       </div>
@@ -578,15 +808,37 @@
 
   <footer class="site-footer">
     <div class="container footer-wrap">
-      <p>© 2026 Клининг Профессионалы, Омск и область</p>
-      <a href="contacts.html">Связаться с нами</a>
+      <div class="footer-brand">
+        <a class="logo footer-logo" href="index.html" aria-label="BelClean">
+          <span class="logo-mark" aria-hidden="true">B</span>
+          <span class="logo-word">
+            <span class="logo-word-dark">BEL</span><span class="logo-word-accent">CLEAN</span>
+          </span>
+        </a>
+        <p>BelClean - клининговые услуги в Волжском и Волгограде</p>
+      </div>
+      <div class="footer-links">
+        <a class="phone js-phone js-phone-display" href="#">Телефон</a>
+        <a class="js-tg" href="#" target="_blank" rel="noopener">Telegram</a>
+        <a href="contacts.html">Контакты</a>
+      </div>
     </div>
   </footer>
 
   <div class="messenger-widget" aria-label="Мессенджеры">
-    <a class="messenger-link tg js-tg" href="#" target="_blank" rel="noopener" aria-label="Telegram">TG</a>
-    <a class="messenger-link wa js-wa" href="#" target="_blank" rel="noopener" aria-label="WhatsApp">WA</a>
-    <a class="messenger-link vk js-vk" href="#" target="_blank" rel="noopener" aria-label="VK">VK</a>
+    <a class="messenger-link call js-phone" href="#" aria-label="Позвонить">Позвонить</a>
+    <a class="messenger-link tg js-tg" href="#" target="_blank" rel="noopener" aria-label="Telegram">Telegram</a>
+  </div>
+
+  <div class="success-modal js-success-modal" hidden>
+    <div class="success-modal-overlay js-success-modal-close" aria-hidden="true"></div>
+    <div class="success-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="success-modal-title">
+      <button class="success-modal-close" type="button" aria-label="Закрыть окно">×</button>
+      <div class="success-modal-badge" aria-hidden="true">OK</div>
+      <h2 id="success-modal-title">Заявка отправлена</h2>
+      <p>Спасибо! Мы свяжемся с вами в течение 15 минут и уточним детали.</p>
+      <button class="btn success-modal-action js-success-modal-close" type="button">Закрыть</button>
+    </div>
   </div>
 
   <script src="assets/js/main.js"></script>

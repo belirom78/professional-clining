@@ -1,9 +1,7 @@
 const CONFIG = {
-  tgUsername: 'USERNAME',
-  waPhone: '70000000000',
-  vkUrl: 'https://vk.com/USERNAME',
-  phoneDisplay: '+7 (3812) 99-99-99',
-  phoneTel: '+73812999999'
+  tgUsername: 'belclean_cleaning',
+  phoneDisplay: '+7 (937) 103-49-09',
+  phoneTel: '+79371034909'
 };
 
 /* ---- Contact links ---- */
@@ -11,14 +9,6 @@ const CONFIG = {
 const initContactLinks = () => {
   document.querySelectorAll('.js-tg').forEach((link) => {
     link.setAttribute('href', `https://t.me/${CONFIG.tgUsername}`);
-  });
-
-  document.querySelectorAll('.js-wa').forEach((link) => {
-    link.setAttribute('href', `https://wa.me/${CONFIG.waPhone}`);
-  });
-
-  document.querySelectorAll('.js-vk').forEach((link) => {
-    link.setAttribute('href', CONFIG.vkUrl);
   });
 
   document.querySelectorAll('.js-phone').forEach((link) => {
@@ -41,6 +31,27 @@ if (menuButton && nav) {
   menuButton.addEventListener('click', () => {
     const isOpen = nav.classList.toggle('open');
     menuButton.setAttribute('aria-expanded', String(isOpen));
+  });
+
+  nav.querySelectorAll('a').forEach((link) => {
+    link.addEventListener('click', () => {
+      nav.classList.remove('open');
+      menuButton.setAttribute('aria-expanded', 'false');
+    });
+  });
+
+  document.addEventListener('click', (event) => {
+    if (!nav.classList.contains('open')) return;
+    if (nav.contains(event.target) || menuButton.contains(event.target)) return;
+    nav.classList.remove('open');
+    menuButton.setAttribute('aria-expanded', 'false');
+  });
+
+  window.addEventListener('resize', () => {
+    if (window.innerWidth > 960) {
+      nav.classList.remove('open');
+      menuButton.setAttribute('aria-expanded', 'false');
+    }
   });
 }
 
@@ -237,6 +248,92 @@ if ((parallaxBackgrounds.length || parallaxDecor.length) && !isMobileViewport &&
 
 const formatRub = (value) => `${new Intl.NumberFormat('ru-RU').format(value)} \u20BD`;
 
+/* ---- Success modal + submit cooldown ---- */
+
+const successModal = document.querySelector('.js-success-modal');
+const successModalDialog = successModal?.querySelector('.success-modal-dialog');
+const successModalCloseButtons = successModal?.querySelectorAll('.js-success-modal-close, .success-modal-close') || [];
+const formCooldownUntil = new WeakMap();
+const formCooldownTimers = new WeakMap();
+let previousBodyOverflow = '';
+let lastFocusedElement = null;
+
+const openSuccessModal = () => {
+  if (!successModal) return;
+
+  lastFocusedElement = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+  previousBodyOverflow = document.body.style.overflow;
+  document.body.style.overflow = 'hidden';
+  successModal.hidden = false;
+  successModalDialog?.setAttribute('tabindex', '-1');
+  successModalDialog?.focus();
+};
+
+const closeSuccessModal = () => {
+  if (!successModal || successModal.hidden) return;
+
+  successModal.hidden = true;
+  document.body.style.overflow = previousBodyOverflow;
+  lastFocusedElement?.focus?.();
+};
+
+successModalCloseButtons.forEach((button) => {
+  button.addEventListener('click', closeSuccessModal);
+});
+
+document.addEventListener('keydown', (event) => {
+  if (event.key === 'Escape' && successModal && !successModal.hidden) {
+    closeSuccessModal();
+  }
+});
+
+const getFormCooldownRemaining = (form) => {
+  const cooldownUntil = formCooldownUntil.get(form) || 0;
+  return Math.max(0, cooldownUntil - Date.now());
+};
+
+const startFormCooldown = (form, button, messageNode, idleText) => {
+  if (!form || !button) return;
+
+  const cooldownUntil = Date.now() + 15000;
+  const baseText = idleText || button.dataset.idleText || button.textContent;
+  const existingTimer = formCooldownTimers.get(form);
+
+  button.dataset.idleText = baseText;
+  formCooldownUntil.set(form, cooldownUntil);
+
+  if (existingTimer) {
+    clearInterval(existingTimer);
+  }
+
+  const updateCooldownState = () => {
+    const remaining = getFormCooldownRemaining(form);
+
+    if (remaining <= 0) {
+      const timerId = formCooldownTimers.get(form);
+      if (timerId) clearInterval(timerId);
+      formCooldownTimers.delete(form);
+      formCooldownUntil.delete(form);
+      button.disabled = false;
+      button.textContent = baseText;
+      if (messageNode && messageNode.textContent.includes('Повторная отправка')) {
+        messageNode.textContent = '';
+      }
+      return;
+    }
+
+    const seconds = Math.ceil(remaining / 1000);
+    button.disabled = true;
+    button.textContent = `Повторно через ${seconds} сек`;
+    if (messageNode) {
+      messageNode.textContent = 'Повторная отправка будет доступна через несколько секунд';
+    }
+  };
+
+  updateCooldownState();
+  formCooldownTimers.set(form, window.setInterval(updateCooldownState, 1000));
+};
+
 const calculators = document.querySelectorAll('.js-calc');
 
 calculators.forEach((calc) => {
@@ -324,6 +421,642 @@ calculators.forEach((calc) => {
   });
 
   calculate();
+});
+
+/* ---- Order form integration ---- */
+
+const orderCalculators = document.querySelectorAll('.js-calc');
+
+orderCalculators.forEach((calc) => {
+  const calcSection = calc.closest('.calc-section') || document;
+  const areaInput = calc.querySelector('.js-area');
+  const totalOutput = calc.querySelector('.js-total');
+  const orderShell = calcSection.querySelector('.js-order-shell');
+  const orderForm = calcSection.querySelector('.js-order-form');
+  const orderNameInput = calcSection.querySelector('.js-order-name');
+  const orderPhoneInput = calcSection.querySelector('.js-order-phone');
+  const orderDateInput = calcSection.querySelector('.js-order-date');
+  const orderAreaInput = calcSection.querySelector('.js-order-area');
+  const orderTypeInput = calcSection.querySelector('.js-order-type');
+  const orderOptionsInput = calcSection.querySelector('.js-order-options');
+  const orderTotalInput = calcSection.querySelector('.js-order-total');
+  const summaryArea = calcSection.querySelector('.js-summary-area');
+  const summaryType = calcSection.querySelector('.js-summary-type');
+  const summaryOptions = calcSection.querySelector('.js-summary-options');
+  const summaryTotal = calcSection.querySelector('.js-summary-total');
+  const orderError = calcSection.querySelector('.js-order-error');
+  const orderSuccess = calcSection.querySelector('.js-order-success');
+  const orderSubmit = calcSection.querySelector('.js-order-submit');
+
+  if (!areaInput || !totalOutput || !orderForm || !orderShell || !orderError || !orderSuccess || !orderSubmit) return;
+
+  const getSelectedType = () => calc.querySelector('input[name="cleaningType"]:checked');
+
+  const getSelectedOptions = () => {
+    const selectedOptions = [...calc.querySelectorAll('.js-option:checked')];
+    const total = selectedOptions.reduce((sum, option) => sum + Number(option.value || 0), 0);
+    const labels = selectedOptions.map((option) => option.dataset.label || option.value);
+    return { total, labels };
+  };
+
+  const calculateOrder = () => {
+    const area = Number(areaInput.value);
+    const selectedType = getSelectedType();
+    const rate = Number(selectedType?.dataset.rate || 0);
+    const { total: optionsTotal, labels } = getSelectedOptions();
+    const optionsText = labels.length ? labels.join(', ') : 'Без доп. опций';
+
+    if (!Number.isFinite(area) || area < 1 || area > 1000) {
+      return {
+        valid: false,
+        area: 0,
+        type: selectedType?.value || '',
+        optionsText,
+        total: 0,
+        totalText: '0 ₽'
+      };
+    }
+
+    const total = Math.round(area * rate + optionsTotal);
+
+    return {
+      valid: true,
+      area,
+      type: selectedType?.value || '',
+      optionsText,
+      total,
+      totalText: formatRub(total)
+    };
+  };
+
+  const syncOrderState = () => {
+    const result = calculateOrder();
+
+    if (summaryArea) summaryArea.textContent = result.valid ? `${result.area} м²` : '0 м²';
+    if (summaryType) summaryType.textContent = result.valid ? result.type : 'Не выбран';
+    if (summaryOptions) summaryOptions.textContent = result.optionsText;
+    if (summaryTotal) summaryTotal.textContent = result.valid ? result.totalText : '0 ₽';
+
+    if (orderAreaInput) orderAreaInput.value = result.valid ? String(result.area) : '';
+    if (orderTypeInput) orderTypeInput.value = result.valid ? result.type : '';
+    if (orderOptionsInput) orderOptionsInput.value = result.optionsText;
+    if (orderTotalInput) orderTotalInput.value = result.valid ? String(result.total) : '';
+
+    return result;
+  };
+
+  const revealOrderForm = () => {
+    orderShell.hidden = false;
+    const targetTop = orderShell.getBoundingClientRect().top + window.scrollY - 24;
+    window.scrollTo({
+      top: Math.max(0, targetTop),
+      behavior: prefersReducedMotion ? 'auto' : 'smooth'
+    });
+  };
+
+  if (orderDateInput) {
+    const now = new Date();
+    const today = new Date(now.getTime() - now.getTimezoneOffset() * 60000)
+      .toISOString()
+      .split('T')[0];
+    orderDateInput.min = today;
+  }
+
+  calc.addEventListener('input', () => {
+    syncOrderState();
+  });
+
+  calc.addEventListener('change', () => {
+    syncOrderState();
+  });
+
+  calc.addEventListener('submit', (event) => {
+    const result = syncOrderState();
+
+    event.preventDefault();
+    event.stopImmediatePropagation();
+
+    if (!result.valid) {
+      areaInput.focus();
+      return;
+    }
+
+    orderError.textContent = '';
+    orderSuccess.hidden = true;
+    revealOrderForm();
+    orderNameInput?.focus();
+  }, true);
+
+  orderForm.addEventListener('submit', async (event) => {
+    event.preventDefault();
+
+    const result = syncOrderState();
+    const name = orderNameInput?.value.trim() || '';
+    const phone = orderPhoneInput?.value.trim() || '';
+
+    if (!result.valid) {
+      orderError.textContent = 'Сначала рассчитайте стоимость уборки.';
+      areaInput.focus();
+      return;
+    }
+
+    if (!name) {
+      orderError.textContent = 'Укажите имя, чтобы мы знали, как к вам обращаться.';
+      orderNameInput?.focus();
+      return;
+    }
+
+    if (!phone) {
+      orderError.textContent = 'Укажите телефон для связи.';
+      orderPhoneInput?.focus();
+      return;
+    }
+
+    orderError.textContent = '';
+    orderSuccess.hidden = true;
+
+    const initialButtonText = orderSubmit.textContent;
+    orderSubmit.disabled = true;
+    orderSubmit.textContent = 'Отправляем...';
+
+    try {
+      const response = await fetch(orderForm.action, {
+        method: 'POST',
+        body: new FormData(orderForm),
+        headers: {
+          'X-Requested-With': 'fetch'
+        }
+      });
+
+      const data = await response.json().catch(() => ({
+        success: false,
+        message: 'Не удалось обработать ответ сервера.'
+      }));
+
+      if (!response.ok || !data.success) {
+        throw new Error(data.message || 'Не удалось отправить заявку. Попробуйте ещё раз.');
+      }
+
+      orderSuccess.textContent = data.message || 'Заявка отправлена. Мы свяжемся с вами в ближайшее время.';
+      orderSuccess.hidden = false;
+      orderForm.reset();
+      syncOrderState();
+    } catch (error) {
+      orderError.textContent = error.message || 'Не удалось отправить заявку. Попробуйте ещё раз.';
+    } finally {
+      orderSubmit.disabled = false;
+      orderSubmit.textContent = initialButtonText;
+    }
+  });
+
+  syncOrderState();
+});
+
+/* ---- Order form UX enhancements ---- */
+
+const enhancedOrderForms = document.querySelectorAll('.js-order-form');
+
+enhancedOrderForms.forEach((orderForm) => {
+  const calcSection = orderForm.closest('.calc-section') || document;
+  const calc = calcSection.querySelector('.js-calc');
+  const areaInput = calcSection.querySelector('.js-area');
+  const orderNameInput = orderForm.querySelector('.js-order-name');
+  const orderPhoneInput = orderForm.querySelector('.js-order-phone');
+  const orderRoomTypeInput = orderForm.querySelector('.js-order-room-type');
+  const orderDateInput = orderForm.querySelector('.js-order-date');
+  const orderTimeInput = orderForm.querySelector('.js-order-time');
+  const orderCallbackInput = orderForm.querySelector('.js-order-callback');
+  const orderHoneypotInput = orderForm.querySelector('input[name="website"]');
+  const orderAreaInput = orderForm.querySelector('.js-order-area');
+  const orderTypeInput = orderForm.querySelector('.js-order-type');
+  const orderOptionsInput = orderForm.querySelector('.js-order-options');
+  const orderTotalInput = orderForm.querySelector('.js-order-total');
+  const summaryArea = calcSection.querySelector('.js-summary-area');
+  const summaryType = calcSection.querySelector('.js-summary-type');
+  const summaryOptions = calcSection.querySelector('.js-summary-options');
+  const summaryTotal = calcSection.querySelector('.js-summary-total');
+  const orderError = orderForm.querySelector('.js-order-error');
+  const orderSuccess = orderForm.querySelector('.js-order-success');
+  const orderSubmit = orderForm.querySelector('.js-order-submit');
+  const orderNameError = orderForm.querySelector('.js-order-name-error');
+  const orderPhoneError = orderForm.querySelector('.js-order-phone-error');
+  const orderDateError = orderForm.querySelector('.js-order-date-error');
+  const orderTimeError = orderForm.querySelector('.js-order-time-error');
+  const orderShell = calcSection.querySelector('.js-order-shell');
+
+  if (!calc || !areaInput || !orderPhoneInput || !orderDateInput || !orderTimeInput || !orderSubmit || !orderError || !orderSuccess) return;
+
+  const getSelectedType = () => calc.querySelector('input[name="cleaningType"]:checked');
+
+  const getSelectedOptions = () => {
+    const selectedOptions = [...calc.querySelectorAll('.js-option:checked')];
+    const total = selectedOptions.reduce((sum, option) => sum + Number(option.value || 0), 0);
+    const labels = selectedOptions.map((option) => option.dataset.label || option.value);
+    return { total, labels };
+  };
+
+  const normalizePhoneDigits = (value) => {
+    const digits = String(value || '').replace(/\D/g, '');
+    if (!digits) return '';
+    if (digits[0] === '8') return `7${digits.slice(1)}`;
+    if (digits[0] === '7') return digits;
+    return `7${digits}`;
+  };
+
+  const formatPhoneInput = (value) => {
+    const digits = normalizePhoneDigits(value).slice(0, 11);
+    if (!digits) return '';
+
+    const part1 = digits.slice(1, 4);
+    const part2 = digits.slice(4, 7);
+    const part3 = digits.slice(7, 9);
+    const part4 = digits.slice(9, 11);
+
+    let formatted = '+7';
+    if (part1) formatted += ` (${part1}`;
+    if (part1.length === 3) formatted += ')';
+    if (part2) formatted += ` ${part2}`;
+    if (part3) formatted += `-${part3}`;
+    if (part4) formatted += `-${part4}`;
+
+    return formatted;
+  };
+
+  const setFieldError = (input, errorNode, message) => {
+    const field = input?.closest('.order-field');
+    if (errorNode) errorNode.textContent = message || '';
+    if (field) field.classList.toggle('is-invalid', Boolean(message));
+  };
+
+  const clearFieldErrors = () => {
+    setFieldError(orderNameInput, orderNameError, '');
+    setFieldError(orderPhoneInput, orderPhoneError, '');
+    setFieldError(orderDateInput, orderDateError, '');
+    setFieldError(orderTimeInput, orderTimeError, '');
+    orderError.textContent = '';
+  };
+
+  const getCalculationData = () => {
+    const area = Number(areaInput.value);
+    const selectedType = getSelectedType();
+    const rate = Number(selectedType?.dataset.rate || 0);
+    const { total: optionsTotal, labels } = getSelectedOptions();
+    const optionsText = labels.length ? labels.join(', ') : 'Без доп. опций';
+
+    if (!Number.isFinite(area) || area < 1 || area > 1000) {
+      return {
+        valid: false,
+        area: 0,
+        type: selectedType?.value || '',
+        optionsText,
+        total: 0,
+        totalText: '0 ₽'
+      };
+    }
+
+    const total = Math.round(area * rate + optionsTotal);
+    return {
+      valid: true,
+      area,
+      type: selectedType?.value || '',
+      optionsText,
+      total,
+      totalText: formatRub(total)
+    };
+  };
+
+  const syncOrderData = () => {
+    const result = getCalculationData();
+
+    if (summaryArea) summaryArea.textContent = result.valid ? `${result.area} м²` : '0 м²';
+    if (summaryType) summaryType.textContent = result.valid ? result.type : 'Не выбран';
+    if (summaryOptions) summaryOptions.textContent = result.optionsText;
+    if (summaryTotal) summaryTotal.textContent = result.valid ? result.totalText : '0 ₽';
+
+    if (orderAreaInput) orderAreaInput.value = result.valid ? String(result.area) : '';
+    if (orderTypeInput) orderTypeInput.value = result.valid ? result.type : '';
+    if (orderOptionsInput) orderOptionsInput.value = result.optionsText;
+    if (orderTotalInput) orderTotalInput.value = result.valid ? String(result.total) : '';
+
+    return result;
+  };
+
+  const isPastDate = (value) => {
+    if (!value) return false;
+    const selectedDate = new Date(`${value}T00:00:00`);
+    if (Number.isNaN(selectedDate.getTime())) return true;
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    return selectedDate < today;
+  };
+
+  const validateEnhancedOrder = (result) => {
+    const name = orderNameInput?.value.trim() || '';
+    const phoneDigits = normalizePhoneDigits(orderPhoneInput.value);
+    const dateValue = orderDateInput.value;
+    const timeValue = orderTimeInput.value;
+    let isValid = true;
+
+    clearFieldErrors();
+
+    if (!result.valid) {
+      orderError.textContent = 'Сначала рассчитайте стоимость уборки.';
+      return false;
+    }
+
+    if (!name) {
+      setFieldError(orderNameInput, orderNameError, 'Укажите имя.');
+      isValid = false;
+    }
+
+    if (phoneDigits.length !== 11) {
+      setFieldError(orderPhoneInput, orderPhoneError, 'Введите телефон полностью в формате +7 (999) 999-99-99.');
+      isValid = false;
+    }
+
+    if (!dateValue) {
+      setFieldError(orderDateInput, orderDateError, 'Выберите дату уборки.');
+      isValid = false;
+    } else if (isPastDate(dateValue)) {
+      setFieldError(orderDateInput, orderDateError, 'Дата уборки не может быть в прошлом.');
+      isValid = false;
+    }
+
+    if (!timeValue) {
+      setFieldError(orderTimeInput, orderTimeError, 'Выберите удобное время.');
+      isValid = false;
+    }
+
+    if (!isValid) {
+      orderError.textContent = 'Проверьте заполнение полей формы.';
+    }
+
+    return isValid;
+  };
+
+  const focusFirstInvalidField = () => {
+    const invalidField = orderForm.querySelector('.order-field.is-invalid input, .order-field.is-invalid select, .order-field.is-invalid textarea');
+    invalidField?.focus();
+  };
+
+  const today = new Date();
+  const localToday = new Date(today.getTime() - today.getTimezoneOffset() * 60000)
+    .toISOString()
+    .split('T')[0];
+  orderDateInput.min = localToday;
+
+  const applyPhoneMask = () => {
+    orderPhoneInput.value = formatPhoneInput(orderPhoneInput.value);
+  };
+
+  orderPhoneInput.addEventListener('input', applyPhoneMask);
+  orderPhoneInput.addEventListener('focus', applyPhoneMask);
+  orderPhoneInput.addEventListener('blur', applyPhoneMask);
+
+  orderNameInput?.addEventListener('input', () => setFieldError(orderNameInput, orderNameError, ''));
+  orderPhoneInput.addEventListener('input', () => setFieldError(orderPhoneInput, orderPhoneError, ''));
+  orderDateInput.addEventListener('input', () => setFieldError(orderDateInput, orderDateError, ''));
+  orderTimeInput.addEventListener('change', () => setFieldError(orderTimeInput, orderTimeError, ''));
+
+  calc.addEventListener('input', syncOrderData);
+  calc.addEventListener('change', syncOrderData);
+
+  const revealOrderForm = () => {
+    if (!orderShell) return;
+
+    orderShell.hidden = false;
+
+    const targetTop = orderShell.getBoundingClientRect().top + window.scrollY - 24;
+    window.scrollTo({
+      top: Math.max(0, targetTop),
+      behavior: prefersReducedMotion ? 'auto' : 'smooth'
+    });
+  };
+
+  calc.addEventListener('submit', (event) => {
+    const result = syncOrderData();
+
+    event.preventDefault();
+    event.stopImmediatePropagation();
+
+    if (!result.valid) {
+      areaInput.focus();
+      return;
+    }
+
+    orderError.textContent = '';
+    orderSuccess.hidden = true;
+    revealOrderForm();
+    orderNameInput?.focus();
+  }, true);
+
+  orderForm.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    event.stopImmediatePropagation();
+
+    const result = syncOrderData();
+    const cooldownRemaining = getFormCooldownRemaining(orderForm);
+
+    if (!validateEnhancedOrder(result)) {
+      focusFirstInvalidField();
+      return;
+    }
+
+    if (orderHoneypotInput?.value.trim()) {
+      orderError.textContent = 'Не удалось отправить заявку. Проверьте данные и попробуйте снова.';
+      return;
+    }
+
+    if (cooldownRemaining > 0) {
+      orderError.textContent = 'Повторная отправка будет доступна через несколько секунд';
+      return;
+    }
+
+    clearFieldErrors();
+    orderSuccess.hidden = true;
+
+    const initialButtonText = orderSubmit.textContent;
+    orderSubmit.disabled = true;
+    orderSubmit.textContent = 'Отправляем...';
+
+    try {
+      const response = await fetch(orderForm.action, {
+        method: 'POST',
+        body: new FormData(orderForm),
+        headers: {
+          'X-Requested-With': 'fetch'
+        }
+      });
+
+      const data = await response.json().catch(() => ({
+        success: false,
+        message: 'Не удалось обработать ответ сервера.'
+      }));
+
+      if (!response.ok || !data.success) {
+        throw new Error(data.message || 'Не удалось отправить заявку. Попробуйте ещё раз.');
+      }
+
+      orderSuccess.textContent = data.message || 'Заявка отправлена. Мы свяжемся с вами в ближайшее время.';
+      orderForm.reset();
+      orderPhoneInput.value = '';
+      if (orderRoomTypeInput && !orderRoomTypeInput.value) {
+        orderRoomTypeInput.value = 'Квартира';
+      }
+      if (orderCallbackInput) orderCallbackInput.checked = false;
+      clearFieldErrors();
+      syncOrderData();
+      openSuccessModal();
+      startFormCooldown(orderForm, orderSubmit, orderError, initialButtonText);
+    } catch (error) {
+      orderError.textContent = error.message || 'Не удалось отправить заявку. Попробуйте ещё раз.';
+    } finally {
+      if (getFormCooldownRemaining(orderForm) <= 0) {
+        orderSubmit.disabled = false;
+        orderSubmit.textContent = initialButtonText;
+      }
+    }
+  }, true);
+
+  syncOrderData();
+});
+
+/* ---- Hero lead form ---- */
+
+const heroLeadForms = document.querySelectorAll('.js-hero-lead-form');
+
+heroLeadForms.forEach((form) => {
+  const nameInput = form.querySelector('.js-hero-name');
+  const phoneInput = form.querySelector('.js-hero-phone');
+  const honeypotInput = form.querySelector('input[name="website"]');
+  const errorOutput = form.querySelector('.js-hero-error');
+  const successOutput = form.querySelector('.js-hero-success');
+  const submitButton = form.querySelector('.js-hero-submit');
+
+  if (!nameInput || !phoneInput || !errorOutput || !successOutput || !submitButton) return;
+
+  const normalizePhoneDigits = (value) => {
+    const digits = String(value || '').replace(/\D/g, '');
+    if (!digits) return '';
+    if (digits[0] === '8') return `7${digits.slice(1)}`;
+    if (digits[0] === '7') return digits;
+    return `7${digits}`;
+  };
+
+  const formatPhoneInput = (value) => {
+    const digits = normalizePhoneDigits(value).slice(0, 11);
+    if (!digits) return '';
+
+    const part1 = digits.slice(1, 4);
+    const part2 = digits.slice(4, 7);
+    const part3 = digits.slice(7, 9);
+    const part4 = digits.slice(9, 11);
+
+    let formatted = '+7';
+    if (part1) formatted += ` (${part1}`;
+    if (part1.length === 3) formatted += ')';
+    if (part2) formatted += ` ${part2}`;
+    if (part3) formatted += `-${part3}`;
+    if (part4) formatted += `-${part4}`;
+
+    return formatted;
+  };
+
+  const setFieldInvalid = (input, invalid) => {
+    const field = input.closest('.hero-lead-field');
+    if (field) field.classList.toggle('is-invalid', invalid);
+  };
+
+  const clearErrors = () => {
+    errorOutput.textContent = '';
+    setFieldInvalid(nameInput, false);
+    setFieldInvalid(phoneInput, false);
+  };
+
+  const applyPhoneMask = () => {
+    phoneInput.value = formatPhoneInput(phoneInput.value);
+  };
+
+  phoneInput.addEventListener('input', applyPhoneMask);
+  phoneInput.addEventListener('focus', applyPhoneMask);
+  phoneInput.addEventListener('blur', applyPhoneMask);
+
+  nameInput.addEventListener('input', () => setFieldInvalid(nameInput, false));
+  phoneInput.addEventListener('input', () => setFieldInvalid(phoneInput, false));
+
+  form.addEventListener('submit', async (event) => {
+    event.preventDefault();
+
+    const name = nameInput.value.trim();
+    const phoneDigits = normalizePhoneDigits(phoneInput.value);
+    const cooldownRemaining = getFormCooldownRemaining(form);
+
+    clearErrors();
+    successOutput.hidden = true;
+
+    if (!name) {
+      setFieldInvalid(nameInput, true);
+      errorOutput.textContent = 'Укажите имя.';
+      nameInput.focus();
+      return;
+    }
+
+    if (phoneDigits.length !== 11) {
+      setFieldInvalid(phoneInput, true);
+      errorOutput.textContent = 'Введите телефон полностью в формате +7 (999) 999-99-99.';
+      phoneInput.focus();
+      return;
+    }
+
+    if (honeypotInput?.value.trim()) {
+      errorOutput.textContent = 'Не удалось отправить заявку. Проверьте данные и попробуйте снова.';
+      return;
+    }
+
+    if (cooldownRemaining > 0) {
+      errorOutput.textContent = 'Повторная отправка будет доступна через несколько секунд';
+      return;
+    }
+
+    const initialButtonText = submitButton.textContent;
+    submitButton.disabled = true;
+    submitButton.textContent = 'Отправляем...';
+
+    try {
+      const response = await fetch(form.action, {
+        method: 'POST',
+        body: new FormData(form),
+        headers: {
+          'X-Requested-With': 'fetch'
+        }
+      });
+
+      const data = await response.json().catch(() => ({
+        success: false,
+        message: 'Не удалось обработать ответ сервера.'
+      }));
+
+      if (!response.ok || !data.success) {
+        throw new Error(data.message || 'Не удалось отправить заявку. Попробуйте ещё раз.');
+      }
+
+      successOutput.textContent = data.message || 'Заявка отправлена. Скоро свяжемся.';
+      form.reset();
+      phoneInput.value = '';
+      clearErrors();
+      openSuccessModal();
+      startFormCooldown(form, submitButton, errorOutput, initialButtonText);
+    } catch (error) {
+      errorOutput.textContent = error.message || 'Не удалось отправить заявку. Попробуйте ещё раз.';
+    } finally {
+      if (getFormCooldownRemaining(form) <= 0) {
+        submitButton.disabled = false;
+        submitButton.textContent = initialButtonText;
+      }
+    }
+  });
 });
 
 /* ---- Before / After sliders ---- */
