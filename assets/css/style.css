@@ -229,7 +229,7 @@ p {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 20px;
+  gap: 18px;
   min-height: 88px;
 }
 .logo {
@@ -238,6 +238,7 @@ p {
   gap: 12px;
   font-weight: 800;
   letter-spacing: 0.04em;
+  flex-shrink: 0;
 }
 .logo-mark {
   display: grid;
@@ -266,16 +267,24 @@ p {
 .nav {
   display: flex;
   align-items: center;
-  gap: 26px;
+  justify-content: center;
+  flex: 1 1 auto;
+  min-width: 0;
+  gap: 32px;
 }
 .nav-contact-link {
+  display: none;
+}
+.nav-order-link {
   display: none;
 }
 .nav a {
   position: relative;
   color: var(--muted);
-  font-size: 0.96rem;
+  font-size: 0.92rem;
   font-weight: 700;
+  padding: 8px 0;
+  white-space: nowrap;
   transition: color 0.2s ease;
 }
 .nav a::after {
@@ -302,7 +311,8 @@ p {
 .header-actions {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 12px;
+  flex-shrink: 0;
 }
 .menu-toggle {
   display: none;
@@ -315,6 +325,91 @@ p {
   background: #fff;
   color: var(--text);
   cursor: pointer;
+}
+@media (max-width: 1240px) {
+  .nav {
+    gap: 24px;
+  }
+  .nav a {
+    font-size: 0.88rem;
+  }
+  .header-actions {
+    gap: 10px;
+  }
+  .phone,
+  .btn-header {
+    padding-inline: 16px;
+  }
+}
+@media (max-width: 1080px) {
+  .header-wrap {
+    min-height: 76px;
+  }
+  .menu-toggle {
+    display: inline-flex;
+  }
+  .nav {
+    display: flex;
+    position: absolute;
+    top: calc(100% + 10px);
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 10px;
+    padding: 20px;
+    border: 1px solid rgba(217, 217, 217, 0.96);
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.96);
+    box-shadow: var(--shadow);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateY(-8px);
+    transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s ease;
+    z-index: 35;
+  }
+  .nav.open {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateY(0);
+  }
+  .nav a {
+    width: 100%;
+    padding: 10px 0;
+    font-size: 0.96rem;
+  }
+  .nav-contact-link,
+  .nav-order-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 50px;
+    padding: 0 18px;
+    border: 1px solid rgba(217, 217, 217, 0.96);
+    border-radius: 12px;
+    background: #f9f9f9;
+    color: var(--text);
+  }
+  .nav-contact-link.js-tg {
+    background: rgba(33, 158, 217, 0.08);
+    border-color: rgba(33, 158, 217, 0.24);
+    color: #1f91cb;
+  }
+  .nav-order-link {
+    background: linear-gradient(180deg, #f9db18, var(--accent));
+    border-color: transparent;
+    color: var(--text);
+    box-shadow: 0 14px 24px rgba(244, 208, 0, 0.24);
+  }
+  .header-actions {
+    display: none;
+  }
+  .nav a::after {
+    bottom: -4px;
+  }
 }
 .parallax-wrapper {
   position: relative;
@@ -809,6 +904,11 @@ p {
   display: flex;
   flex-direction: column;
   gap: 18px;
+  height: 100%;
+}
+.service-card > p {
+  margin-top: 0;
+  flex: 1 1 auto;
 }
 .service-card-media {
   display: grid;
@@ -826,20 +926,30 @@ p {
 }
 .service-card-footer {
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  gap: 14px;
+  align-items: flex-end;
+  flex-wrap: nowrap;
+  gap: 16px;
   margin-top: auto;
-  padding-top: 6px;
+  padding-top: 10px;
 }
 .price {
+  margin: 0;
   color: var(--text);
   font-size: 1.1rem;
   font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 .service-link {
+  display: inline-block;
   color: var(--text);
   font-weight: 700;
+  line-height: 1.3;
+  text-align: right;
+  max-width: 55%;
 }
 .service-link:hover {
   color: var(--gold-deep);
@@ -2288,10 +2398,18 @@ p {
     grid-template-columns: 1fr;
   }
   .hero-actions,
-  .service-card-footer,
   .cta-actions {
     align-items: stretch;
     flex-direction: column;
+  }
+  .service-card-footer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .service-link {
+    text-align: left;
+    max-width: 100%;
   }
   .contact-direct-buttons,
   .hero-availability-links {
